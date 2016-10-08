@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Morse transmitter and reciever</title>
+	<style type="text/css">
+		.row
+		{
+			width: 100%;
+			float: left;
+		}
+		.input-container
+		{
+			width: 100%;
+			float:left;
+		}
+
+		.input-key-container
+		{
+			margin: 5px 20px 20px 70px;
+			border: 1px solid;
+			border-radius: 5px;
+			height: 100px;
+			width: 200px;
+			box-shadow: 8px 8px 8px grey;
+			float: left;
+			display: block;
+		}
+
+		.textfield
+		{
+			margin:10px;
+		}
+		.key-pressed-timer
+		{
+			font-size: 13px;
+			font-family: "Courier";
+			float: left;
+			display: block;
+			margin: 0px 20px;
+		}
+		.key-pressed-timer ul
+		{
+			margin: 0;
+			padding: 0;
+		}
+
+		.key-pressed-timer span
+		{
+			color: blue;
+		}
+
+		.timer-info-div
+		{
+			font-size: 12px;
+			font-style: italic;
+			margin: 0px 15px;
+		}
+
+		.output-container
+		{
+			float: left;
+			width: 100%;
+		}
+
+		.morse-out-svg-container
+		{
+			float: left;
+			width: 100%;
+		}
+
+		.morse-out
+		{
+			float: left;
+			margin: 5px 20px 2px 20px;
+			height:30px;
+			width: 300px;
+			border: 1px solid;
+			border-radius: 5px;
+			display: block;
+			box-shadow: 8px 8px 8px grey;
+		}
+		.morse-out-decoded-container
+		{
+			float: left;
+			width: 100%;
+		}
+		.morse-out-decoded
+		{
+			float: left;
+			margin: 20px;
+			height:200px;
+			width:280px;
+			border: 1px solid;
+			border-radius: 5px;
+			display: block;
+			font-weight: bold;
+			font-size: 15px;
+			padding: 10px;
+			box-shadow: 8px 8px 8px grey;
+		}
+		.reference-container
+		{
+			border: 1px solid;
+			border-radius: 5px;
+			float: left;
+			margin: 20px;
+			box-shadow: 8px 8px 8px grey;
+		}
+		.app-container
+		{
+			float: left;
+			width:20%;
+		}
+
+		h2
+		{
+			margin: 20px;
+			font-family: 'Helvetica';
+			border: 1px solid;
+			width:35%;
+			padding: 10px;
+			border-radius: 5px;
+			background: grey;
+			color: white;
+		}
+
+		.fancy-message
+		{
+			width:100%;
+			float: left;
+			margin: 20px;
+		}
+		.fancy-message span
+		{
+			margin: 20px 0px;
+			font-family: 'Helvetica';
+			border: 5px solid maroon;
+			padding: 10px;
+			border-radius: 25px;
+			font-size: 14px;
+			color:yellow;
+			background: green;
+			font-weight: bold;
+		}
+		.label
+		{
+			font-weight:bold;
+			font-size: 14px;
+			font-family: 'Helvetica';
+			margin: 20px 20px 0px 20px;
+		}
+
+	</style>
+</head>
+<body>
+	<h2>Morse code - Transmitter and Reciever - Demo</h2>
+	<div class="app-container">
+		<div class="output-container">
+			<span class="label">Rx - Reciever</span>
+			<div id="morse-out-svg-container" class="morse-out-svg-container">
+				<div class="morse-out">
+					<svg viewBox="2 2 300 30" xmlns="http://www.w3.org/2000/svg" id="morse-out-svg">
+						<!-- Elements pushed dynamically here-->
+					</svg>
+				</div>
+			</div>
+			<div id="morse-out-decoded-container" class="morse-out-decoded-container">
+				<span id="morse-out-decoded" class="morse-out-decoded"></span>
+			</div>
+		</div>
+
+		<div class="input-container">
+			<span class="label">Tx - Transmitter</span>
+			<div class="row">
+				<div class="input-key-container">
+					<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" id="morse-in-svg">
+			  			<circle id="dot" cx="50" cy="50" r="20" stroke="#C0C0C0" fill="#C0C0C0"/>
+			  			<rect id="dash" x="100" y="40" rx="5" ry="5" width="70" height="20" stroke="#C0C0C0" fill="#C0C0C0"/>
+					</svg>
+				</div>
+			</div>
+			<div id="key-pressed-timer" class="key-pressed-timer">
+				<div><span id="countervalue">0</span> milliseconds</div>
+				<div class="timer-info-div">
+					<ul>
+						<li>For a <b>dot</b> press "Space" key for at-least 70 till at-most 180 milliseconds</li>
+						<li>For a <b>dash</b> press "Space" key for at-least 200 till at-most 350 milliseconds</li>
+						<li><b>Since it is just a demo and not a real app, in-case you find any problem just refresh the screen.</b></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div class="fancy-message">
+			<span>Just press 'Space' key and try for yourself! </span>
+		</div>
+	</div>
+
+	<div class="reference-container">
+		<img src="315px-International_Morse_Code.svg.png"/>
+	</div>
+
+	<script type="text/javascript">
+
+		var morse = new function()
+		{
+			var that = this;
+
+			var dot_duration = 10; // 100 milliseconds
+
+			var dot_duration_tolerance = 19;
+
+			var counter = 0;
+
+			var keyCode = 32; // 32 is space-bar
+
+			var nIntervalId = undefined;
+
+			var colorChangeInterval = undefined;
+
+			var rxInterval = undefined;
+
+			var tx_data = undefined;
+
+			var dot = 0;
+
+			var dash = 1;
+
+			var grey_color = '#C0C0C0' , green_color = '#90EE90'
+
+			var data_store = [];
+
+			var letter_break = ' ';
+
+			var word_break = '  ';
+
+			var morse_map = 
+			{
+				'01':'A',
+				'1000':'B',
+				'1010':'C',
+				'100':'D',
+				'0':'E',
+				'0010':'F',
+				'110':'G',
+				'0000':'H',
+				'00':'I',
+				'0111':'J',
+				'101':'K',
+				'0100':'L',
+				'11':'M',
+				'10':'N',
+				'111':'O',
+				'0110':'P',
+				'1101':'Q',
+				'010':'R',
+				'000':'S',
+				'1':'T',
+				'001':'U',
+				'0001':'V',
+				'011':'W',
+				'1001':'X',
+				'1011':'Y',
+				'1100':'Z',
+				//------
+				'01111':'1',
+				'00111':'2',
+				'00011':'3',
+				'00001':'4',
+				'00000':'5',
+				'10000':'6',
+				'11000':'7',
+				'11100':'8',
+				'11110':'9',
+				'11111':'0'
+			};
+
+			this.startCounter = function()
+			{
+				// increment counter for every 10 milliseconds
+				nIntervalId = setInterval(function(){ counter += 1; }, 10);
+			};
+
+			this.stopCounter = function()
+			{
+				if(nIntervalId)
+				{
+					clearInterval(nIntervalId);
+					nIntervalId = undefined;
+				}
+			};
+
+			this.isCounterRunning = function()
+			{
+				return (true && nIntervalId);
+			}
+
+			this.displayCounterValue = function()
+			{
+				// since the increment of counter occurs for every 10 milliseconds, 
+				// in order to get elapsed milliseconds we need to multiply the counter with 10
+				document.getElementById("countervalue").innerHTML = counter * 10;
+			};
+
+			this.reset = function(shape)
+			{
+				counter = 0;
+				that.change_shape_color(shape,grey_color,false);
+				setTimeout(function(){ tx_data = undefined; }, 10); // after 10 milliseconds tx register is cleared
+			};
+
+			this.changeColorAnimation = function(fromColor, toColor, svgShapeId)
+			{
+				var futureColorDEC = new Number((new Number('0x'+toColor.substring(1))).toString(10));
+				var previousColorDEC = new Number((new Number('0x'+fromColor.substring(1))).toString(10));
+				var diff = futureColorDEC - previousColorDEC;
+				var changeColorInSteps = 10;
+				var unitPerStep = diff/changeColorInSteps;
+				var futureColorTemp = previousColorDEC;
+				colorChangeInterval = setInterval(function()
+					{
+						futureColorTemp += unitPerStep;
+						var futureColorCode = '#'+futureColorTemp.toString(16);
+						that.change_shape_color(svgShapeId,futureColorCode,true);
+						if(
+							(diff > 0 && futureColorTemp >= futureColorDEC)
+							||
+							(diff < 0 && futureColorTemp <= futureColorDEC)
+						)
+						{
+							that.change_shape_color(svgShapeId,futureColorCode,true);
+							clearInterval(colorChangeInterval);
+						}
+
+					},10);
+			};
+
+			this.change_shape_color = function(shape,color,immediate)
+			{
+				var s = document.getElementById(shape);
+				if(s)
+				{
+					if(immediate)
+					{
+						s.setAttribute('fill',color);
+						s.setAttribute('stroke',color);
+					}
+					else
+					{
+						// animate after 10 milliseconds
+						var fromColor = s.getAttribute('fill');
+						setTimeout(function()
+						{
+							that.changeColorAnimation(fromColor, color, shape);
+						}, dot_duration * 10);
+					}
+				}
+			};
+
+			this.process_input = function()
+			{
+				var shape = undefined;;
+				var data = undefined;
+				if(counter < dot_duration_tolerance)
+				{
+					// it's a dot
+					shape = 'dot';
+					data = dot;
+				}
+				else
+				{
+					// it's a dash
+					shape = 'dash';
+					data = dash;
+				}
+				that.tx(data);
+				that.change_shape_color(shape,green_color,true);
+				that.reset(shape);
+			};
+
+			this.tx = function(data)
+			{
+				// send user input across the wire
+				tx_data = data;
+			};
+
+			this.getNewSVGElement = function(name)
+			{
+				var svgns="http://www.w3.org/2000/svg";
+				var shape = document.createElementNS(svgns, name);
+				return shape;
+			};
+
+			this.getSVGDot = function()
+			{
+				var c = that.getNewSVGElement('circle');
+				c.setAttribute('r', 6);
+				c.setAttribute('stroke', 'black');
+				c.setAttribute('fill','black');
+				c.setAttribute('cy', 16);
+				return c;
+			};
+
+			this.getSVGDash = function()
+			{
+				var r = that.getNewSVGElement('rect');
+				r.setAttribute('rx',2);
+				r.setAttribute('ry',2);
+				r.setAttribute('width',20);
+				r.setAttribute('height',6);
+				r.setAttribute('stroke','black');
+				r.setAttribute('fill','black');
+				r.setAttribute('y', 14);
+				return r;
+			};
+
+			this.paintMorseData = function(d)
+			{
+				/*
+					Element difference:
+					dot - dash = 30px
+					dash - dot = 10px
+					dot - dot = 15px
+					dash - dash = 25px
+
+					Letter difference:
+					Element difference + 5px
+
+					Word difference:
+					Element difference + 15px
+
+					For box of size width 300 px, for good view
+						start dot of radius 6 at 292 (-8)
+						start dash of width 20 at 278 (-22)
+				*/
+
+				var svgElement = document.getElementById('morse-out-svg');
+
+				while (svgElement.firstChild) 
+				{
+				    svgElement.removeChild(svgElement.firstChild);
+				}
+
+				var cx = 300;
+
+				var blank_space_width = 5;
+
+				var previous_data = undefined;
+
+				if(data_store && data_store.length)
+				{
+					for(var i=data_store.length - 1; i>-1; i-=1)
+					{
+						if(data_store[i] === 1)
+						{
+							// dash
+							if(previous_data === 0)
+							{
+								cx -= 30;
+							}
+							else if(previous_data === 1)
+							{
+								cx -= 25;
+							}
+							else
+							{
+								// if previous element is undefined then this is the first element
+								cx -= 22;
+							}
+
+							previous_data = data_store[i];
+							var dash = that.getSVGDash();
+							dash.setAttribute('x', cx);
+							svgElement.appendChild(dash);
+						}
+						else if(data_store[i] === 0)
+						{
+							// dot
+							if(previous_data === 0)
+							{
+								cx -= 15;
+							}
+							else if(previous_data === 1)
+							{
+								cx -= 10;
+							}
+							else
+							{
+								// if previous element is undefined then this is the first element
+								cx -= 8;
+							}
+
+							previous_data = data_store[i];
+							var dot = that.getSVGDot();
+							dot.setAttribute('cx', cx);
+							svgElement.appendChild(dot);
+						}
+						else
+						{
+							cx -= 5;
+						}
+					}
+				}
+			};
+
+			this.decodeAndPrint = function()
+			{
+				console.log(data_store);
+				var decoded_data = '';
+				var str = '';
+				for(var i=0; i<data_store.length; i+=1)
+				{
+					if(data_store[i] === letter_break)
+					{
+						decoded_data += ' ';
+						if(str)
+						{
+							decoded_data += morse_map[str];
+						}
+						str = '';
+					}
+					else if(data_store[i] === 1)
+					{
+						str += '1';
+					}
+					else if(data_store[i] === 0)
+					{
+						str += '0';
+					}
+				}
+
+				document.getElementById('morse-out-decoded').innerText = decoded_data;
+			};
+
+			this.storeData = function(data)
+			{
+				if(data === 1 || data === 0)
+				{
+					data_store.push(data);
+				}
+				else if(data === letter_break || data === word_break)
+				{
+					Array.prototype.push.apply(data_store, data.split(''));
+				}
+				setTimeout(function()
+					{ 
+						that.paintMorseData(tx_data); 
+						that.decodeAndPrint();
+					}, 0);
+			};
+
+			this.scanInput = function()
+			{
+				var emptyScanCounter = 0;
+				return function()
+				{
+					if(emptyScanCounter > (2 * dot_duration * 10)
+						&& (emptyScanCounter < (6 * dot_duration * 10))) 
+					{
+						// it is a letter gap
+						if(data_store[data_store.length - 1] !== letter_break)
+						{
+							setTimeout(function(){ that.storeData(letter_break); }, 0);
+						}
+					}
+					else if(emptyScanCounter > (7 * dot_duration * 10))
+					{
+						// it is word gap
+						if(data_store[data_store.length - 2] !== letter_break)
+						{
+							setTimeout(function(){ that.storeData(word_break); }, 0);	
+						}
+					}
+
+					if(tx_data !== undefined)
+					{
+						emptyScanCounter = 0;
+						setTimeout(function(){ that.storeData(tx_data); }, 0);
+					}
+					else
+					{
+						emptyScanCounter += 1;
+					}
+				};
+				
+			}();
+
+			this.rx = function()
+			{
+				// get data from wire
+				rxInterval = setInterval(that.scanInput, 10);
+			};
+
+			this.onkeydown = function(event)
+			{
+				if(event && event.keyCode === keyCode && !that.isCounterRunning())
+				{
+					that.startCounter();
+				}
+			};
+
+			this.onkeyup = function(event)
+			{
+				if(event && event.keyCode === keyCode)
+				{
+					that.stopCounter();
+					that.displayCounterValue();
+					that.process_input();
+				}
+			};
+
+		}();
+
+
+		/* ************************************************************ */
+
+		window.onload = function()
+		{
+				window.onkeydown = morse.onkeydown;
+
+				window.onkeyup = morse.onkeyup;
+
+				morse.rx();
+		}
+	</script>
+
+</body>
+</html>

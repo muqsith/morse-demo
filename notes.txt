@@ -1,0 +1,10 @@
+dot duration = 100 millisecond
+dash duration = 3 * dot duration
+
+silence after dot or dash = 1 * dot duration
+
+silence after a letter = 3 * dot duration
+
+silence after a word = 7 * dot duration
+
+
