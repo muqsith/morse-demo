@@ -515,7 +515,12 @@
 						decoded_data += ' ';
 						if(str)
 						{
-							decoded_data += morse_map[str];
+							var d = morse_map[str];
+							if(!d)
+							{
+								d = ' &#9609; ';
+							}
+							decoded_data += d;						
 						}
 						str = '';
 					}
@@ -529,7 +534,7 @@
 					}
 				}
 
-				document.getElementById('morse-out-decoded').innerText = decoded_data;
+				document.getElementById('morse-out-decoded').innerHTML = decoded_data;
 			};
 
 			this.storeData = function(data)
