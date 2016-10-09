@@ -2,18 +2,10 @@
 <html>
 <head>
 	<title>Morse transmitter and reciever</title>
+	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css.map">
+	<script type="text/javascript" src="bootstrap-3.3.7-dist/js/boostrap.min.js"></script>
 	<style type="text/css">
-		.row
-		{
-			width: 100%;
-			float: left;
-		}
-		.input-container
-		{
-			width: 100%;
-			float:left;
-		}
-
 		.input-key-container
 		{
 			margin: 5px 20px 20px 70px;
@@ -26,10 +18,6 @@
 			display: block;
 		}
 
-		.textfield
-		{
-			margin:10px;
-		}
 		.key-pressed-timer
 		{
 			font-size: 13px;
@@ -55,19 +43,6 @@
 			font-style: italic;
 			margin: 0px 15px;
 		}
-
-		.output-container
-		{
-			float: left;
-			width: 100%;
-		}
-
-		.morse-out-svg-container
-		{
-			float: left;
-			width: 100%;
-		}
-
 		.morse-out
 		{
 			float: left;
@@ -78,11 +53,6 @@
 			border-radius: 5px;
 			display: block;
 			box-shadow: 8px 8px 8px grey;
-		}
-		.morse-out-decoded-container
-		{
-			float: left;
-			width: 100%;
 		}
 		.morse-out-decoded
 		{
@@ -98,34 +68,12 @@
 			padding: 10px;
 			box-shadow: 8px 8px 8px grey;
 		}
-		.reference-container
-		{
-			border: 1px solid;
-			border-radius: 5px;
-			float: left;
-			margin: 20px;
-			box-shadow: 8px 8px 8px grey;
-		}
-		.tx-container
-		{
-			float: left;
-			width:20%;
-			border-right: 2px solid;
-		}
-
-		.rx-container
-		{
-			float: left;
-			width:20%;
-			border-right: 2px solid;
-		}
 
 		h2
 		{
 			margin: 20px;
 			font-family: 'Helvetica';
 			border: 1px solid;
-			width:60%;
 			padding: 10px;
 			border-radius: 5px;
 			background: grey;
@@ -137,6 +85,7 @@
 			width:100%;
 			float: left;
 			margin: 20px;
+			display: block;
 		}
 		.fancy-message span
 		{
@@ -160,60 +109,90 @@
 			background: skyblue;
 			border-radius: 3px;
 			padding:2px;
+			float: left;
+			display: block;
+		}
+
+		.border-right
+		{
+			border-right: 2px solid;
 		}
 
 	</style>
 </head>
 <body>
-	<h2>Morse code - Transmitter and Reciever - Demo</h2>
-	
-	<div class="tx-container">
-		<div class="input-container">
-			<span class="label">Tx - Transmitter</span>
+	<div class="row">
+		<div class="col-md-12">
+			<h2>Morse code - Transmitter and Reciever - Demo</h2>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-4 border-right">
 			<div class="row">
-				<div class="input-key-container">
-					<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" id="morse-in-svg">
-			  			<circle id="dot" cx="50" cy="50" r="20" stroke="#C0C0C0" fill="#C0C0C0"/>
-			  			<rect id="dash" x="100" y="40" rx="5" ry="5" width="70" height="20" stroke="#C0C0C0" fill="#C0C0C0"/>
-					</svg>
+				<div class="col-md-4">
+					<span class="label">Tx - Transmitter</span>
+					<div class="input-key-container">
+						<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" id="morse-in-svg">
+				  			<circle id="dot" cx="50" cy="50" r="20" stroke="#C0C0C0" fill="#C0C0C0"/>
+				  			<rect id="dash" x="100" y="40" rx="5" ry="5" width="70" height="20" stroke="#C0C0C0" fill="#C0C0C0"/>
+						</svg>
+					</div>
 				</div>
 			</div>
-			<div id="key-pressed-timer" class="key-pressed-timer">
-				<div><span id="countervalue">0</span> milliseconds</div>
-				<div class="timer-info-div">
-					<ul>
-						<li>For a <b>dot</b> press "Space" key for at-least 70 till at-most 180 milliseconds</li>
-						<li>For a <b>dash</b> press "Space" key for at-least 200 till at-most 350 milliseconds</li>
-						<li><b>Since it is just a demo and not a real app, in-case you find any problem just refresh the screen.</b></li>
-					</ul>
+			<div class="row">
+				<div class="col-md-12">
+					<div id="key-pressed-timer" class="key-pressed-timer">
+						<div><span id="countervalue">0</span> milliseconds</div>
+						<div class="timer-info-div">
+							<ul>
+								<li>For a <b>dot</b> press "Space" key for at-least 70 till at-most 180 milliseconds</li>
+								<li>For a <b>dash</b> press "Space" key for at-least 200 till at-most 350 milliseconds</li>
+								<li><b>Since it is just a demo and not a real app, in-case you find any problem just refresh the screen.</b></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div class="fancy-message">
+						<span>Just press 'Space' key and try for yourself! </span>
+					</div>
 				</div>
 			</div>
 		</div>
 
-		<div class="fancy-message">
-			<span>Just press 'Space' key and try for yourself! </span>
-		</div>
-	</div>
-
-	<div class="rx-container">
-		<div class="output-container">
-			<span class="label">Rx - Reciever</span>
-			<div id="morse-out-svg-container" class="morse-out-svg-container">
-				<div class="morse-out">
-					<svg viewBox="2 2 300 30" xmlns="http://www.w3.org/2000/svg" id="morse-out-svg">
-						<!-- Elements pushed dynamically here-->
-					</svg>
+		<div class="col-md-4 border-right">
+			<div class="row">
+				<div class="col-md-4">
+					<span class="label">Rx - Reciever</span>
 				</div>
 			</div>
-			<div id="morse-out-decoded-container" class="morse-out-decoded-container">
-				<span id="morse-out-decoded" class="morse-out-decoded"></span>
+			<div class="row">
+				<div class="col-md-8">
+					<div id="morse-out-svg-container" class="morse-out-svg-container">
+						<div class="morse-out">
+							<svg viewBox="2 2 300 30" xmlns="http://www.w3.org/2000/svg" id="morse-out-svg">
+								<!-- Elements pushed dynamically here-->
+							</svg>
+						</div>
+					</div>
+					<div id="morse-out-decoded-container" class="morse-out-decoded-container">
+						<span id="morse-out-decoded" class="morse-out-decoded"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-4 border-right">
+			<div class="row">
+				<div class="col-md-12">
+					<img src="315px-International_Morse_Code.svg.png"/>
+				</div>
 			</div>
 		</div>
 	</div>
-
-	<div class="reference-container">
-		<img src="315px-International_Morse_Code.svg.png"/>
-	</div>
+	
 
 	<script type="text/javascript">
 
