@@ -2,9 +2,10 @@
 <html>
 <head>
 	<title>Morse transmitter and reciever</title>
+	<script type="text/javascript" src="bootstrap-3.3.7-dist/js/jquery-3.1.1.min.js"></script>
+	<script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css">
-	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.min.css.map">
-	<script type="text/javascript" src="bootstrap-3.3.7-dist/js/boostrap.min.js"></script>
+	<link rel="stylesheet" type="text/plain" href="bootstrap-3.3.7-dist/css/bootstrap.min.css.map">
 	<style type="text/css">
 		.input-key-container
 		{
@@ -267,6 +268,22 @@
 				'11100':'8',
 				'11110':'9',
 				'11111':'0'
+			};
+
+			var shortBeep = new Audio('censor-beep-01.wav');
+			var longBeep = new Audio('censor-beep-2.wav');	
+
+			this.playBeep = function(data)
+			{
+				setTimeout(function()
+				{
+					var name = '';
+					if(data === 0)
+						shortBeep.play();	
+					else
+						longBeep.play();
+					
+				}, 0);
 			};
 
 			this.startCounter = function()
@@ -536,6 +553,7 @@
 				if(data === 1 || data === 0)
 				{
 					data_store.push(data);
+					that.playBeep(data);
 				}
 				else if(data === letter_break || data === word_break)
 				{
