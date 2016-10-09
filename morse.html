@@ -106,10 +106,18 @@
 			margin: 20px;
 			box-shadow: 8px 8px 8px grey;
 		}
-		.app-container
+		.tx-container
 		{
 			float: left;
 			width:20%;
+			border-right: 2px solid;
+		}
+
+		.rx-container
+		{
+			float: left;
+			width:20%;
+			border-right: 2px solid;
 		}
 
 		h2
@@ -117,7 +125,7 @@
 			margin: 20px;
 			font-family: 'Helvetica';
 			border: 1px solid;
-			width:35%;
+			width:60%;
 			padding: 10px;
 			border-radius: 5px;
 			background: grey;
@@ -154,21 +162,8 @@
 </head>
 <body>
 	<h2>Morse code - Transmitter and Reciever - Demo</h2>
-	<div class="app-container">
-		<div class="output-container">
-			<span class="label">Rx - Reciever</span>
-			<div id="morse-out-svg-container" class="morse-out-svg-container">
-				<div class="morse-out">
-					<svg viewBox="2 2 300 30" xmlns="http://www.w3.org/2000/svg" id="morse-out-svg">
-						<!-- Elements pushed dynamically here-->
-					</svg>
-				</div>
-			</div>
-			<div id="morse-out-decoded-container" class="morse-out-decoded-container">
-				<span id="morse-out-decoded" class="morse-out-decoded"></span>
-			</div>
-		</div>
-
+	
+	<div class="tx-container">
 		<div class="input-container">
 			<span class="label">Tx - Transmitter</span>
 			<div class="row">
@@ -193,6 +188,22 @@
 
 		<div class="fancy-message">
 			<span>Just press 'Space' key and try for yourself! </span>
+		</div>
+	</div>
+
+	<div class="rx-container">
+		<div class="output-container">
+			<span class="label">Rx - Reciever</span>
+			<div id="morse-out-svg-container" class="morse-out-svg-container">
+				<div class="morse-out">
+					<svg viewBox="2 2 300 30" xmlns="http://www.w3.org/2000/svg" id="morse-out-svg">
+						<!-- Elements pushed dynamically here-->
+					</svg>
+				</div>
+			</div>
+			<div id="morse-out-decoded-container" class="morse-out-decoded-container">
+				<span id="morse-out-decoded" class="morse-out-decoded"></span>
+			</div>
 		</div>
 	</div>
 
